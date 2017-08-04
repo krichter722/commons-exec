@@ -45,34 +45,19 @@ public class CommandLineTest {
         assertTrue(cmdl.getArguments().length == 0);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testExecutableZeroLengthString() {
-        try {
-            new CommandLine("");
-            fail("Must throw IllegalArgumentException");
-        } catch (final IllegalArgumentException e) {
-            // Expected
-        }
+        new CommandLine("");
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testExecutableWhitespaceString() {
-        try {
-            new CommandLine("   ");
-            fail("Must throw IllegalArgumentException");
-        } catch (final IllegalArgumentException e) {
-            // Expected
-        }
+        new CommandLine("   ");
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testNullExecutable() {
-        try {
-            new CommandLine((String)null);
-            fail("Must throw IllegalArgumentException");
-        } catch (final IllegalArgumentException e) {
-            // Expected
-        }
+        new CommandLine((String)null);
     }
 
     @Test
@@ -85,13 +70,10 @@ public class CommandLineTest {
         assertArrayEquals(new String[]{"test", "foo", "bar"}, cmdl.toStrings());
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testAddNullArgument() {
         final CommandLine cmdl = new CommandLine("test");
-
         cmdl.addArgument(null);
-        assertEquals("[test]", cmdl.toString());
-        assertArrayEquals(new String[]{"test"}, cmdl.toStrings());
     }
 
     @Test
@@ -181,9 +163,17 @@ public class CommandLineTest {
     @Test
     public void testAddArgumentsArrayNull() {
         final CommandLine cmdl = new CommandLine("test");
-        cmdl.addArguments((String[]) null);
-        assertEquals("[test]", cmdl.toString());
-        assertArrayEquals(new String[]{"test"}, cmdl.toStrings());
+        try {
+            cmdl.addArguments((String[]) null);
+            fail("IllegalArgumentException expected after adding null arguments");
+        }catch(IllegalArgumentException expected) {
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddEmptyArgument() {
+        final CommandLine cmdl = new CommandLine("test");
+        cmdl.addArguments(new String[0]);
     }
 
     /**
@@ -220,34 +210,19 @@ public class CommandLineTest {
         assertArrayEquals(new String[]{"test", "foo", "\"ba r\""}, cmdl.toStrings());
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testParseCommandLineWithUnevenQuotes() {
-        try {
-            CommandLine.parse("test \"foo bar");
-            fail("IllegalArgumentException must be thrown due to uneven quotes");
-        } catch (final IllegalArgumentException e) {
-            // Expected
-        }
+        CommandLine.parse("test \"foo bar");
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testParseCommandLineWithNull() {
-        try {
-            CommandLine.parse(null);
-            fail("IllegalArgumentException must be thrown due to incorrect command line");
-        } catch (final IllegalArgumentException e) {
-            // Expected
-        }
+        CommandLine.parse(null);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testParseCommandLineWithOnlyWhitespace() {
-        try {
-            CommandLine.parse("  ");
-            fail("IllegalArgumentException must be thrown due to incorrect command line");
-        } catch (final IllegalArgumentException e) {
-            // Expected
-        }
+        CommandLine.parse("  ");
     }
 
 
