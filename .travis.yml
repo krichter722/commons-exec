@@ -15,11 +15,17 @@
 
 language: java
 sudo: false
+dist: trusty
 
 jdk:
   - openjdk7
-  - oraclejdk7
   - oraclejdk8
+    # `oraclejdk7` fails due to `Error: JAVA_HOME is not defined correctly.  We cannot execute /usr/lib/jvm/java-7-oracle/bin/java`
+
+install: /bin/true
+
+script:
+- mvn install --update-snapshots -DskipTests=true -Dmaven.javadoc.skip=true --batch-mode --show-version && mvn test verify --batch-mode
 
 after_success:
   - mvn clean cobertura:cobertura coveralls:report
